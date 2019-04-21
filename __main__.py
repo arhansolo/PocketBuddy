@@ -17,6 +17,8 @@ def echo_all(message):
     request.lang = 'ru'
     request.session_id = "RUPB_bot"
     request.query = bot.message_handler(message.text)
+    responseJson = json.loads(request.getresponse().read().decode('utf-8'))
+    response = responseJson['result']['fulfillment']['speech']
     if response:
         bot.send_message(chat_id=update.message.chat_id, text=response)
     else:
