@@ -1,0 +1,1 @@
+heroku config:add API_TOKEN=4473836baf4e4fabba4105048e6b7d4a
