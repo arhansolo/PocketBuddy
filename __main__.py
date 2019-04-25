@@ -1,6 +1,6 @@
 from __future__ import print_function, division
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from telegram import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, KeyboardButton
 import os
 import time
 import giphy_client
@@ -30,14 +30,13 @@ def get_gif():
 
 def send_gif(bot, update):
     keyboard = []
-    keyboard.append([InlineKeyboardButton(text="GIF", callback_data= "1")])
-    markup = InlineKeyboardMarkup(keyboard)
+    keyboard.append([KeyboardButton(text="GIF")])
+    markup = ReplyKeyboardMarkup(keyboard)
 
     ares = get_gif()
     print(ares)
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
     bot.send_message(chat_id=update.message.chat_id, text="Скинуть ещё?", reply_markup=markup)
-    print(CallbackQuery.data())
 
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
