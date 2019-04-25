@@ -30,15 +30,14 @@ def get_gif():
 
 def send_gif(bot, update):
     keyboard = []
-    keyboard.append([InlineKeyboardButton(text="GIF", url="https://tlgrm.ru/docs/bots/api#replykeyboardmarkup", callback_data= "1")])
+    keyboard.append([InlineKeyboardButton(text="GIF", callback_data= "1")])
     markup = InlineKeyboardMarkup(keyboard)
 
     ares = get_gif()
     print(ares)
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
     bot.send_message(chat_id=update.message.chat_id, text="Скинуть ещё?", reply_markup=markup)
-    if CallbackQuery.data == "1":
-        send_gif(bot, update)
+    print(CallbackQuery.data())
 
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
