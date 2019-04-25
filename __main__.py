@@ -30,7 +30,7 @@ def get_gif():
 
 def send_gif(bot, update):
     keyboard = []
-    keyboard.append([InlineKeyboardButton(u'11', callback_data='1')])
+    keyboard.append([InlineKeyboardButton(u'GIF', text="lol")])
     markup = InlineKeyboardMarkup(keyboard)
 
     ares = get_gif()
