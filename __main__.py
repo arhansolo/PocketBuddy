@@ -29,9 +29,9 @@ def get_gif():
         print("Exception when calling DefaultApi->gifs_random_get: %s\n" % e)
 
 def send_gif(bot, update):
-    keyboard = []
-    keyboard.append(InlineKeyboardButton(text="GIF", url="https://tlgrm.ru/docs/bots/api#inlinekeyboardbutton"))
-    markup = InlineKeyboardMarkup(keyboard)
+    markup = InlineKeyboardButton()
+    gif_btn = InlineKeyboardButton(text="GIF", url="https://tlgrm.ru/docs/bots/api#inlinekeyboardbutton")
+    markup.add(gif_btn)
 
     ares = get_gif()
     print(ares)
@@ -40,9 +40,9 @@ def send_gif(bot, update):
 
 
 def startCommand(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \n Ознакомиться с доступными функциями ты сможешь, отправив /functions')
+    bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
 def functionCommand(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Список функция: \n /gif - Команда, которая поднимет тебе настроение!")
+    bot.send_message(chat_id=update.message.chat_id, text="Список функций: \n/gif - Команда, которая поднимет тебе настроение!")
 def textMessage(bot, update):
     request = apiai.ApiAI(API_TOKEN).text_request()
     request.lang = 'ru'
