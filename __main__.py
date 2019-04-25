@@ -1,12 +1,48 @@
-import os
+from __future__ import print_function, division
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram import InlineKeyboardMarkup, InlineKeyboardButton
+import os
+import time
+import giphy_client
+from giphy_client.rest import ApiException
+from pprint import pprint
 import apiai, json
 TOKEN = os.environ["TOKEN"]
 API_TOKEN = os.environ["API_TOKEN"]
+
 updater = Updater(token=TOKEN)
 dispatcher = updater.dispatcher
+
+def get_gif():
+    GIF_TOKEN = os.environ["GIF_TOKEN"]
+    api_instance = giphy_client.DefaultApi()
+    api_key = GIF_TOKEN
+    tag = 'fail'
+    rating = 'g'
+    fmt = 'json'
+
+    try:
+        api_response = api_instance.gifs_random_get(api_key, tag=tag, rating=rating, fmt=fmt)
+        pprint(api_response.data.image_url)
+        return api_response.data.image_url
+    except ApiException as e:
+        print("Exception when calling DefaultApi->gifs_random_get: %s\n" % e)
+
+def send_gif(bot, update):
+    keyboard = []
+    keyboard.append(InlineKeyboardButton(text="GIF", url="https://tlgrm.ru/docs/bots/api#inlinekeyboardbutton"))
+    markup = InlineKeyboardMarkup(keyboard)
+
+    ares = get_gif()
+    print(ares)
+    bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
+    bot.send_message(chat_id=update.message.chat_id, text="Скинуть ещё?", reply_markup=markup)
+
+
 def startCommand(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text='Привет, давай пообщаемся?')
+    bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \n Ознакомиться с доступными функциями ты сможешь, отправив /functions')
+def functionCommand(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text="Список функция: \n /gif - Команда, которая поднимет тебе настроение!")
 def textMessage(bot, update):
     request = apiai.ApiAI(API_TOKEN).text_request()
     request.lang = 'ru'
@@ -18,11 +54,14 @@ def textMessage(bot, update):
     if response:
         bot.send_message(chat_id=update.message.chat_id, text=response)
     else:
-        bot.send_message(chat_id=update.message.chat_id, text='Я Вас не совсем понял!')
+        bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
 
+function_Command_handler = CommandHandler('functions', functionCommand)
 start_command_handler = CommandHandler('start', startCommand)
+gif_command_handler = CommandHandler('gif', send_gif)
 text_message_handler = MessageHandler(Filters.text, textMessage)
-
+dispatcher.add_handler(function_Command_handler)
+dispatcher.add_handler(gif_command_handler)
 dispatcher.add_handler(start_command_handler)
 dispatcher.add_handler(text_message_handler)
 
