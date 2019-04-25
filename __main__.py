@@ -29,9 +29,9 @@ def get_gif():
         print("Exception when calling DefaultApi->gifs_random_get: %s\n" % e)
 
 def send_gif(bot, update):
-    markup = InlineKeyboardButton()
-    gif_btn = InlineKeyboardButton(text="GIF", url="https://tlgrm.ru/docs/bots/api#inlinekeyboardbutton")
-    markup.add(gif_btn)
+    keyboard = []
+    keyboard.append([InlineKeyboardButton(u'11', callback_data='1')])
+    markup = InlineKeyboardMarkup(keyboard)
 
     ares = get_gif()
     print(ares)
