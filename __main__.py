@@ -35,10 +35,12 @@ def send_gif(bot, update):
     keyboard = []
     keyboard.append([KeyboardButton(text="Да")])
     keyboard.append([KeyboardButton(text="Нет")])
-    markup = ReplyKeyboardRemove(keyboard)
+    markup = ReplyKeyboardMarkup(keyboard)
     bot.send_message(chat_id=update.message.chat_id, text="Скинуть ещё?", reply_markup=markup)
     if update.message.text == "Да":
         send_gif(bot, update)
+    else:
+        bot.send_message(chat_id=update.message.chat_id, text='Окей, если захочешь повторить, то отправь мне /gif')
 
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
