@@ -41,7 +41,7 @@ def send_gif(bot, update):
         if update.message.text == "Да":
             send_gif(bot, update)
             break
-        else:
+        elif update.message.text == "Нет":
             bot.send_message(chat_id=update.message.chat_id, text='Окей, если захочешь повторить, то отправь мне /gif')
             break
 def startCommand(bot, update):
