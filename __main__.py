@@ -24,7 +24,7 @@ def get_gif():
         api_response = api_instance.gifs_random_get(api_key, tag=tag, rating=rating, fmt=fmt)
         pprint(api_response.data.image_url)
         return api_response.data.image_url
-    except ApiExeption as e:
+    except ApiException as e:
         print("Exception when calling DefaultApi->gifs_random_get: %s\n" % e)
 
 def send_gif(bot, update):
