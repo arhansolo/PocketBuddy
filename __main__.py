@@ -32,6 +32,12 @@ def send_gif(bot, update):
     ares = get_gif()
     print(ares)
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
+def send_weather(bot, update):
+    print("1")
+    from Weather2 import weather_func
+    print("0")
+    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func("Берёзовский")[1])
+    bot.send_message(chat_id=update.message.chat_id, text=weather_func('Берёзовский')[0])
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
 def functionCommand(bot, update):
@@ -50,12 +56,14 @@ def textMessage(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
 
 function_Command_handler = CommandHandler('functions', functionCommand)
+weather_command_handler = CommandHandler('weather', send_weather)
 start_command_handler = CommandHandler('start', startCommand)
 gif_command_handler = CommandHandler('gif', send_gif)
 text_message_handler = MessageHandler(Filters.text, textMessage)
 dispatcher.add_handler(function_Command_handler)
 dispatcher.add_handler(gif_command_handler)
 dispatcher.add_handler(start_command_handler)
+dispatcher.add_handler(weather_command_handler)
 dispatcher.add_handler(text_message_handler)
 
 updater.start_polling(clean=True)
