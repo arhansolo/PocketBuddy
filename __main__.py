@@ -33,11 +33,11 @@ def send_gif(bot, update):
     print(ares)
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
 def send_weather(bot, update):
-    print("1")
     from Weather2 import weather_func
-    print("0")
-    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func("Берёзовский")[1])
-    bot.send_message(chat_id=update.message.chat_id, text=weather_func('Берёзовский')[0])
+    bot.send_message(chat_id=update.message.chat_id, text='Отправь мне название города, погоду в котором ты хочешь узнать!')
+
+    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(update.message.text)[1])
+    bot.send_message(chat_id=update.message.chat_id, text=weather_func(update.message.text)[0])
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
 def functionCommand(bot, update):
