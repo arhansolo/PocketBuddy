@@ -20,7 +20,6 @@ def get_gif():
     tag = 'fail'
     rating = 'g'
     fmt = 'json'
-
     try:
         api_response = api_instance.gifs_random_get(api_key, tag=tag, rating=rating, fmt=fmt)
         pprint(api_response.data.image_url)
@@ -34,26 +33,31 @@ def send_gif(bot, update):
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
 def send_weather(bot, update):
     from Weather2 import weather_func
+    global arg
+    arg = 1
     bot.send_message(chat_id=update.message.chat_id, text='Отправь мне название города, погоду в котором ты хочешь узнать!')
-
     bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(update.message.text)[1])
-    bot.send_message(chat_id=update.message.chat_id, text=weather_func(update.message.text)[0])
+    bot.send_message(chat_id=update.message.chat_id, text=weather_func(update.message.text)[0]
+    arg = 0
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
 def functionCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Список функций: \n/gif - Команда, которая поднимет тебе настроение!")
 def textMessage(bot, update):
-    request = apiai.ApiAI(API_TOKEN).text_request()
-    request.lang = 'ru'
-    request.session_id = 'RUPB_bot'
-    request.query = update.message.text
-    responseJson = json.loads(request.getresponse().read().decode('utf-8'))
-    response = responseJson['result']['fulfillment']['speech']
-
-    if response:
-        bot.send_message(chat_id=update.message.chat_id, text=response)
+    if arg == 1:
+        pass
     else:
-        bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
+        request = apiai.ApiAI(API_TOKEN).text_request()
+        request.lang = 'ru'
+        request.session_id = 'RUPB_bot'
+        request.query = update.message.text
+        responseJson = json.loads(request.getresponse().read().decode('utf-8'))
+        response = responseJson['result']['fulfillment']['speech']
+
+        if response:
+            bot.send_message(chat_id=update.message.chat_id, text=response)
+        else:
+            bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
 
 function_Command_handler = CommandHandler('functions', functionCommand)
 weather_command_handler = CommandHandler('weather', send_weather)
