@@ -37,7 +37,7 @@ def send_weather(bot, update):
     arg = 1
     bot.send_message(chat_id=update.message.chat_id, text='Отправь мне название города, погоду в котором ты хочешь узнать!')
     bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(update.message.text)[1])
-    bot.send_message(chat_id=update.message.chat_id, text=weather_func(update.message.text)[0]
+    bot.send_message(chat_id=update.message.chat_id, text=weather_func(update.message.text)[0])
     arg = 0
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
