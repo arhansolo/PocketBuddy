@@ -32,44 +32,40 @@ def send_gif(bot, update):
     print(ares)
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
 
-def weather(bot, update):
-    city = update.message.text.replace('/weather_', '')
-    update.message.reply_text(city, parse_mode='Markdown')
-    bot.send_message(chat_id=update.message.chat_id, text=city)
-
 
 def send_weather(bot, update):
     from Weather2 import weather_func
-    city = update.message.text.replace('/weather_', '')
     bot.send_message(chat_id=update.message.chat_id, text='Отправь мне название города, погоду в котором ты хочешь узнать!')
-    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(city)[1])
-    bot.send_message(chat_id=update.message.chat_id, text=weather_func(city)[0])
+    time.sleep(10)
+    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(update.message.text)[1])
+    bot.send_message(chat_id=update.message.chat_id, text=weather_func(update.message.text)[0])
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
 def functionCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Список функций: \n/gif - Команда, которая поднимет тебе настроение!")
 def textMessage(bot, update):
-    request = apiai.ApiAI(API_TOKEN).text_request()
-    request.lang = 'ru'
-    request.session_id = 'RUPB_bot'
-    request.query = update.message.text
-    responseJson = json.loads(request.getresponse().read().decode('utf-8'))
-    response = responseJson['result']['fulfillment']['speech']
-
-    if response:
-        bot.send_message(chat_id=update.message.chat_id, text=response)
+    if send_weather(bot, update):
+        pass
     else:
-        bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
+        request = apiai.ApiAI(API_TOKEN).text_request()
+        request.lang = 'ru'
+        request.session_id = 'RUPB_bot'
+        request.query = update.message.text
+        responseJson = json.loads(request.getresponse().read().decode('utf-8'))
+        response = responseJson['result']['fulfillment']['speech']
+
+        if response:
+            bot.send_message(chat_id=update.message.chat_id, text=response)
+        else:
+            bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
 
 function_Command_handler = CommandHandler('functions', functionCommand)
-weather_city_command_handler = RegexHandler('^(/weather_[\d]+)$', weather)
 weather_command_handler = CommandHandler('weather', send_weather)
 start_command_handler = CommandHandler('start', startCommand)
 gif_command_handler = CommandHandler('gif', send_gif)
 text_message_handler = MessageHandler(Filters.text, textMessage)
 dispatcher.add_handler(function_Command_handler)
 dispatcher.add_handler(gif_command_handler)
-dispatcher.add_handler(weather_city_command_handler)
 dispatcher.add_handler(start_command_handler)
 dispatcher.add_handler(weather_command_handler)
 dispatcher.add_handler(text_message_handler)
