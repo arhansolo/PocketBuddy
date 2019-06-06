@@ -32,15 +32,12 @@ def send_gif(bot, update):
     print(ares)
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
 
-def cityMessage(bot, update):
-    return update.message.text
-
 
 def send_weather(bot, update):
     from Weather2 import weather_func
     bot.send_message(chat_id=update.message.chat_id, text='Отправь мне название города, погоду в котором ты хочешь узнать!')
-    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(cityMessage)[1])
-    bot.send_message(chat_id=update.message.chat_id, text=weather_func(cityMessage)[0])
+    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(textMessage(bot, update))[1])
+    bot.send_message(chat_id=update.message.chat_id, text=weather_func(textMessage(bot, update))[0])
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
 def functionCommand(bot, update):
@@ -55,16 +52,16 @@ def textMessage(bot, update):
 
     if response:
         bot.send_message(chat_id=update.message.chat_id, text=response)
+        return update.message.text
     else:
         bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
+        return update.message.text
 
 function_Command_handler = CommandHandler('functions', functionCommand)
 weather_command_handler = CommandHandler('weather', send_weather)
 start_command_handler = CommandHandler('start', startCommand)
 gif_command_handler = CommandHandler('gif', send_gif)
 text_message_handler = MessageHandler(Filters.text, textMessage)
-city_message_handler = MessageHandler(Filters.text, cityMessage)
-dispatcher.add_handler(city_message_handler)
 dispatcher.add_handler(function_Command_handler)
 dispatcher.add_handler(gif_command_handler)
 dispatcher.add_handler(start_command_handler)
