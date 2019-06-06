@@ -1,5 +1,5 @@
 from __future__ import print_function, division
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, RegexHandler
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 import os
 import time
@@ -31,6 +31,11 @@ def send_gif(bot, update):
     ares = get_gif()
     print(ares)
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
+
+def weather(bot, update):
+    id = update.message.text.replace('/weather_', '')
+    update.message.reply_text(id, parse_mode='Markdown')
+
 def send_weather(bot, update):
     from Weather2 import weather_func
     bot.send_message(chat_id=update.message.chat_id, text='Отправь мне название города, погоду в котором ты хочешь узнать!')
@@ -41,7 +46,6 @@ def startCommand(bot, update):
 def functionCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Список функций: \n/gif - Команда, которая поднимет тебе настроение!")
 def textMessage(bot, update):
-
     request = apiai.ApiAI(API_TOKEN).text_request()
     request.lang = 'ru'
     request.session_id = 'RUPB_bot'
@@ -59,6 +63,7 @@ weather_command_handler = CommandHandler('weather', send_weather)
 start_command_handler = CommandHandler('start', startCommand)
 gif_command_handler = CommandHandler('gif', send_gif)
 text_message_handler = MessageHandler(Filters.text, textMessage)
+dispatcher.add_handler(RegexHandler('^(/weather_[\d]+)$', weather))
 dispatcher.add_handler(function_Command_handler)
 dispatcher.add_handler(gif_command_handler)
 dispatcher.add_handler(start_command_handler)
