@@ -33,14 +33,15 @@ def send_gif(bot, update):
     bot.send_animation(chat_id = update.message.chat_id, animation=ares.replace("'", ""))
 
 def weather(bot, update):
-    id = update.message.text.replace('/weather_', '')
-    update.message.reply_text(id, parse_mode='Markdown')
+    city = update.message.text.replace('/weather_', '')
+    update.message.reply_text(city, parse_mode='Markdown')
+    return city
 
 def send_weather(bot, update):
     from Weather2 import weather_func
     bot.send_message(chat_id=update.message.chat_id, text='Отправь мне название города, погоду в котором ты хочешь узнать!')
-    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(update.message.text)[1])
-    bot.send_message(chat_id=update.message.chat_id, text=weather_func(update.message.text)[0])
+    bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(weather(bot, update))[1])
+    bot.send_message(chat_id=update.message.chat_id, text=weather_func(weather(bot, update))[0])
 def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
 def functionCommand(bot, update):
@@ -59,11 +60,12 @@ def textMessage(bot, update):
         bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
 
 function_Command_handler = CommandHandler('functions', functionCommand)
+weather_city_command_handler = RegexHandler('^(/weather_[\d]+)$', weather)
 weather_command_handler = CommandHandler('weather', send_weather)
 start_command_handler = CommandHandler('start', startCommand)
 gif_command_handler = CommandHandler('gif', send_gif)
 text_message_handler = MessageHandler(Filters.text, textMessage)
-dispatcher.add_handler(RegexHandler('^(/weather_[\d]+)$', weather))
+dispatcher.add_handler(weather_city_command_handler)
 dispatcher.add_handler(function_Command_handler)
 dispatcher.add_handler(gif_command_handler)
 dispatcher.add_handler(start_command_handler)
