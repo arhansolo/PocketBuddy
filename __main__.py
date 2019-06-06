@@ -36,7 +36,6 @@ def send_gif(bot, update):
 def send_weather(bot, update):
     from Weather2 import weather_func
     bot.send_message(chat_id=update.message.chat_id, text='Отправь мне название города, погоду в котором ты хочешь узнать!')
-    time.sleep(10)
     bot.send_photo(chat_id=update.message.chat_id, photo=weather_func(update.message.text)[1])
     bot.send_message(chat_id=update.message.chat_id, text=weather_func(update.message.text)[0])
 def startCommand(bot, update):
