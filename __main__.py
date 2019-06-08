@@ -42,29 +42,38 @@ def startCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text='Тебя приветствует PocketBuddy, твой карманный помошник и личный Telegram-проводник! \nОзнакомиться с доступными функциями ты сможешь, отправив /functions')
 def functionCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Список функций: \n/gif - Команда, которая поднимет тебе настроение!")
-def textMessage(bot, update):
-    request = apiai.ApiAI(API_TOKEN).text_request()
-    request.lang = 'ru'
-    request.session_id = 'RUPB_bot'
-    request.query = update.message.text
-    responseJson = json.loads(request.getresponse().read().decode('utf-8'))
-    response = responseJson['result']['fulfillment']['speech']
+def talk(bot, update):
+    if update.message.text == "/stoptalk":
+        return
+    def textMessage(bot, update):
+        request = apiai.ApiAI(API_TOKEN).text_request()
+        request.lang = 'ru'
+        request.session_id = 'RUPB_bot'
+        request.query = update.message.text
+        responseJson = json.loads(request.getresponse().read().decode('utf-8'))
+        response = responseJson['result']['fulfillment']['speech']
 
-    if response:
-        bot.send_message(chat_id=update.message.chat_id, text=response)
-    else:
-        bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
+        if response:
+            bot.send_message(chat_id=update.message.chat_id, text=response)
+        else:
+            bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
+
+    text_message_handler = MessageHandler(Filters.text, textMessage)
+    dispatcher.add_handler(text_message_handler)
+    updater.start_polling(clean=True)
+
+    updater.idle()
 
 function_Command_handler = CommandHandler('functions', functionCommand)
 weather_command_handler = CommandHandler('weather', send_weather)
 start_command_handler = CommandHandler('start', startCommand)
 gif_command_handler = CommandHandler('gif', send_gif)
-text_message_handler = MessageHandler(Filters.text, textMessage)
+talk_command_handler = CommandHandler('talk', talk)
 dispatcher.add_handler(function_Command_handler)
 dispatcher.add_handler(gif_command_handler)
 dispatcher.add_handler(start_command_handler)
 dispatcher.add_handler(weather_command_handler)
-dispatcher.add_handler(text_message_handler)
+dispatcher.add_handler(talk_command_handler)
 
 updater.start_polling(clean=True)
 
