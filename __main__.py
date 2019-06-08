@@ -57,13 +57,9 @@ def talk(bot, update):
             bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
 
     def stoptalk(bot, update):
-        if False:
-            return False
-        return True
-
-    result = stoptalk(bot, update)
-    if result:
         return
+
+
 
 
     stoptalk_Command_handler = CommandHandler('stoptalk', stoptalk)
