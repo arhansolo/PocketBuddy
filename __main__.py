@@ -43,8 +43,6 @@ def startCommand(bot, update):
 def functionCommand(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Список функций: \n/gif - Команда, которая поднимет тебе настроение!")
 def talk(bot, update):
-    if update.command == "/stoptalk":
-        return
     def textMessage(bot, update):
         request = apiai.ApiAI(API_TOKEN).text_request()
         request.lang = 'ru'
@@ -58,10 +56,13 @@ def talk(bot, update):
         else:
             bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
 
+
+
+
+
     text_message_handler = MessageHandler(Filters.text, textMessage)
     dispatcher.add_handler(text_message_handler)
     updater.start_polling(clean=True)
-
     updater.idle()
 
 function_Command_handler = CommandHandler('functions', functionCommand)
