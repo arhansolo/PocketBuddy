@@ -57,8 +57,12 @@ def talk(bot, update):
             bot.send_message(chat_id=update.message.chat_id, text='Что ты сказал?')
 
     def stoptalk(bot, update):
+        if False:
+            return False
         return True
-    if stoptalk(bot, update):
+
+    result = stoptalk(bot, update)
+    if result:
         return
 
 
